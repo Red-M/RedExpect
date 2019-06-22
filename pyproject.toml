@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "RedExpect"
+version = "1.0.0"
+description = "SSH automation for easy of use and all the extra options"
+
+license = "Linux GPLv2"
+
+authors = [
+    "Red_M <redexpect@red-m.net>"
+]
+
+readme = 'README.md'  # Markdown files are supported
+
+repository = "https://bitbucket.org/Red_M/RedExpect"
+homepage = "https://bitbucket.org/Red_M/RedExpect"
+
+keywords = ['automation', 'SSH', 'expect', 'paramiko', 'SFTP', 'ssh', 'sftp']
+
+[tool.poetry.dependencies]
+python = ">2.8"  # Compatible python versions must be declared here
+paramiko_expect = "*"
+paramiko = "*"
+
