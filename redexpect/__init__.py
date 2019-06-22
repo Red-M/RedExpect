@@ -23,7 +23,8 @@
 
 
 '''
-VERSION = '1.0.0'
+VERSION = '1.0.1'
+
 
 from redexpect.redexpect import RedExpect
 from redexpect.redexpect import exceptions

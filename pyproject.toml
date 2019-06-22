@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "RedExpect"
-version = "1.0.0"
+version = "1.0.1"
 description = "SSH automation for easy of use and all the extra options"
 
 license = "Linux GPLv2"

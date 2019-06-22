@@ -24,7 +24,7 @@ copyright = u'2018, Red_M'
 author = u'Red_M'
 
 # The short X.Y version
-version = u'1.0.0'
+version = u'1.0.1'
 # The full version, including alpha/beta/rc tags
 release = version+' beta'
 
@@ -199,6 +199,7 @@ highlight_language = 'py'
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
     'python': ('https://docs.python.org/3', None),
+    'redssh': ('https://redssh.readthedocs.io/en/latest/', None),
     'paramiko': ('https://docs.paramiko.org/en/stable/', None)
 }
 
