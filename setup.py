@@ -1,5 +1,5 @@
 # RedExpect
-# Copyright (C) 2018  Red_M ( http://bitbucket.com/Red_M )
+# Copyright (C) 2019  Red_M ( http://bitbucket.com/Red_M )
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -52,10 +52,14 @@ setuptools.setup(
         'docs':deps+doc_deps
     },
     classifiers=[
-        'Development Status :: 4 - Beta',
+        'Development Status :: 5 - Production/Stable',
+        'Programming Language :: Python :: Implementation :: CPython',
+        'Programming Language :: Python',
+        'Programming Language :: Python :: 3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
         'Intended Audience :: Developers'
     ],
 )

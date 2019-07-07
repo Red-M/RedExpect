@@ -1,5 +1,5 @@
 # RedExpect
-# Copyright (C) 2018  Red_M ( http://bitbucket.com/Red_M )
+# Copyright (C) 2019  Red_M ( http://bitbucket.com/Red_M )
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@
 
 
 '''
-VERSION = '1.0.1'
+VERSION = '2.0.0'
 
 
 from redexpect.redexpect import RedExpect

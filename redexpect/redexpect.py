@@ -1,5 +1,5 @@
 # RedExpect
-# Copyright (C) 2018  Red_M ( http://bitbucket.com/Red_M )
+# Copyright (C) 2019  Red_M ( http://bitbucket.com/Red_M )
 
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -162,7 +162,9 @@ class RedExpect(redssh.RedSSH):
 
         while (len(re_strings)==0 or not [re_string for re_string in re_strings if re.search(default_match_prefix+re_string,self.current_output,re.DOTALL)]):
             for current_buffer in self.read():
+                # print(current_buffer)
                 current_buffer_decoded = self.remote_text_clean(current_buffer.decode(self.encoding),strip_ansi=strip_ansi)
+                # print(current_buffer_decoded)
                 self.current_output += current_buffer_decoded
 
         if len(re_strings)!=0:
@@ -175,6 +177,7 @@ class RedExpect(redssh.RedSSH):
         self.current_send_string = ''
 
         if len(re_strings)!=0 and len(found_pattern)!=0:
+            # print(self.current_output_clean)
             self.current_output_clean = re.sub(found_pattern[0][1],'',self.current_output_clean)
             self.last_match = found_pattern[0][1]
             return(found_pattern[0][0])
@@ -201,7 +204,7 @@ class RedExpect(redssh.RedSSH):
         else:
             out = self.current_output
         if remove_newline==True:
-            if out.endswith('\n'):
+            while out.endswith('\n') or out.endswith('\r'):
                 out = out[:-1]
         return(out)
 
