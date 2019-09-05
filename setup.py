@@ -24,13 +24,18 @@ with open('VERSION', 'r') as fh:
 
 
 deps = [
-    'redssh'
+    'redssh>=2*'
 ]
 
 doc_deps = [
-    'redssh',
     'sphinx',
     'sphinx_rtd_theme'
+]
+
+test_deps = [
+    'paramiko',
+    'coveralls',
+    'pytest-cov'
 ]
 
 
@@ -48,8 +53,8 @@ setuptools.setup(
     platforms='Posix',
     install_requires=deps,
     extras_require={
-        'tests':deps+doc_deps,
-        'docs':deps+doc_deps
+        'tests':list(set(deps+test_deps)),
+        'docs':list(set(deps+doc_deps))
     },
     classifiers=[
         'Development Status :: 5 - Production/Stable',

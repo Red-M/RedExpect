@@ -12,7 +12,7 @@ You can install via pip with `pip install redexpect` or the latest commit which 
 [![Documentation Status](https://readthedocs.org/projects/redexpect/badge/?version=latest)](https://redexpect.readthedocs.io/en/latest/?badge=latest)
 
 
-[Now with autodocs!](https://redexpect.readthedocs.io/en/latest/ "Docs! :)")
+[Now with autodocs!](https://redexpect.readthedocs.io/en/latest/ "Documentation! :)")
 
 
 # TO DO
