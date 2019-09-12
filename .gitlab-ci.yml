@@ -24,7 +24,6 @@ tests:
     - wget -O get-pip.py https://bootstrap.pypa.io/get-pip.py
     - python3 ./get-pip.py
     - pip install -e ./[tests]
-    - pytest
-    - coverage report
+    - pytest;coverage report
     only:
     - master
