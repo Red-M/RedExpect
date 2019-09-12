@@ -25,5 +25,6 @@ tests:
     - python3 ./get-pip.py
     - pip install -e ./[tests]
     - pytest
+    - coverage
     only:
     - master
