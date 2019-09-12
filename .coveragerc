@@ -1,0 +1,3 @@
+[run]
+source = redexpect
+parallel = True
