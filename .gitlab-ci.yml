@@ -16,3 +16,14 @@ pages:
         - public
     only:
     - master
+
+tests:
+    script:
+    - apt update
+    - apt install \-y make curl wget python3 python3-distutils
+    - wget -O get-pip.py https://bootstrap.pypa.io/get-pip.py
+    - python3 ./get-pip.py
+    - pip install -e ./[tests]
+    - pytest
+    only:
+    - master
