@@ -24,8 +24,9 @@ tests:
     - wget -O get-pip.py https://bootstrap.pypa.io/get-pip.py
     - python3 ./get-pip.py
     - pip install -e ./[tests]
-    - pytest --cov=redexpect .
-    - coverage html
-    - coverage report
+    - ./tests/test.sh
+    artifacts:
+        paths:
+        - htmlcov
     only:
     - master

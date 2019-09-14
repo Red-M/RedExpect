@@ -28,4 +28,11 @@ class BadSudoPassword(RedExpectException):
     def __init__(self):
         RedExpectException.__init__(self,'Bad sudo password provided, could not gain root.')
 
+class ExpectTimeout(RedExpectException):
+    '''
+    This will be raised when searching for a certain string takes too long.
+    '''
+    def __init__(self,wait_object):
+        RedExpectException.__init__(self,'Timed out waiting for '+str(wait_object)+'.')
+
 

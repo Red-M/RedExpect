@@ -17,6 +17,7 @@
 
 
 import os
+import time
 import re
 import redssh
 
@@ -34,19 +35,24 @@ class RedExpect(redssh.RedSSH):
     :type prompt: ``regex string``
     :param encoding: Set the encoding to something other than the default of ``'utf8'`` when your target SSH server doesn't return UTF-8.
     :type encoding: ``str``
-    :param newline: Set the newline for sending and recieving text to the remote server to something other than the default of ``'\\r'``.
+    :param newline: Set the newline for sending and recieving text to the remote server.
     :type newline: ``str``
+    :param expect_timeout: Set the timeout in seconds for when expecting a certain string to appear, this means that the string or regex has to be matched within this time. Set to ``0`` to disable.
+    :type expect_timeout: ``float``
     '''
-    def __init__(self,prompt=r'.+?[\#\$]\s+',encoding='utf8',newline='\r',**kwargs):
+    def __init__(self,prompt=r'.+?[\#\$]\s+',encoding='utf8',newline='\r',expect_timeout=300.0,**kwargs):
         super().__init__(**kwargs)
         self.debug = False
         self.encoding = encoding
         self.basic_prompt = prompt
         self.prompt_regex = prompt
+        self.prompt_regex_SET_SH = r"PS1='[REDEXPECT]\$ '"
+        self.prompt_regex_SET_CSH = r"set prompt='[REDEXPECT]\$ '"
         self.current_send_string = ''
         self.current_output = ''
         self.current_output_clean = ''
         self.newline = newline
+        self.expect_timeout = expect_timeout
 
     def __check_for_attr__(self,attr):
         return(attr in self.__dict__)
@@ -132,7 +138,7 @@ class RedExpect(redssh.RedSSH):
         '''
         self.expect(self.prompt_regex)
 
-    def expect(self,re_strings='',default_match_prefix='',strip_ansi=True):
+    def expect(self,re_strings='',default_match_prefix='',strip_ansi=True,timeout=None):
         '''
         This function takes in a regular expression (or regular expressions)
         that represent the last line of output from the server. The function
@@ -160,12 +166,18 @@ class RedExpect(redssh.RedSSH):
         if isinstance(re_strings,str) and len(re_strings)!=0:
             re_strings = [re_strings]
 
+        time_started = time.time()
+        if timeout==None:
+            timeout = self.expect_timeout
+
         while (len(re_strings)==0 or not [re_string for re_string in re_strings if re.search(default_match_prefix+re_string,self.current_output,re.DOTALL)]):
             for current_buffer in self.read():
                 # print(current_buffer)
                 current_buffer_decoded = self.remote_text_clean(current_buffer.decode(self.encoding),strip_ansi=strip_ansi)
                 # print(current_buffer_decoded)
                 self.current_output += current_buffer_decoded
+            if float(time.time()-time_started)>timeout and timeout!=0:
+                raise(exceptions.ExpectTimeout(re_strings))
 
         if len(re_strings)!=0:
             found_pattern = [(re_index,re_string) for (re_index,re_string) in enumerate(re_strings) if re.search(default_match_prefix+re_string,self.current_output,re.DOTALL)]
@@ -181,8 +193,10 @@ class RedExpect(redssh.RedSSH):
             self.current_output_clean = re.sub(found_pattern[0][1],'',self.current_output_clean)
             self.last_match = found_pattern[0][1]
             return(found_pattern[0][0])
-        else:
-            return(-1)
+        # else:
+            # return(-1)
+        # If someone manages to get a ``None`` instead of a -1 please open an issue.
+        # I want to know how you did that so I can write a test for it :)
 
     def command(self,cmd,clean_output=True,remove_newline=False):
         '''
@@ -223,14 +237,16 @@ class RedExpect(redssh.RedSSH):
         :raises: :class:`redexpect.exceptions.BadSudoPassword` if the password provided does not allow for privilege escalation.
         '''
         cmd = su_cmd
-        reg = r'.+?asswor.+?\:\s+'
+        password_line = r'.+?asswor.+?\:\s+'
         if sudo==True:
             cmd = 'sudo '+su_cmd
         self.sendline(cmd)
-        self.expect(reg)
+        self.expect(password_line)
         self.sendline_raw(password+self.newline)
-        result = self.expect(re_strings=[self.basic_prompt,reg,r'Sorry.+?\.',r'.+?Authentication failure']) # Might be an idea to allow extra failure strings here to be more platform agnostic
-        if result==0:
+        acceptable_response = [self.basic_prompt]
+        bad_response = [password_line,r'Sorry.+?\.',r'.+?Authentication failure']
+        result = self.expect(re_strings=bad_response+acceptable_response) # Might be an idea to allow extra failure strings here to be more platform agnostic
+        if result>=len(bad_response)-1:
             self.set_unique_prompt()
         else:
             raise(exceptions.BadSudoPassword())
