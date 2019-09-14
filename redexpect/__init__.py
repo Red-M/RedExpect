@@ -23,7 +23,7 @@
 
 
 '''
-VERSION = '2.0.1'
+VERSION = u'2.0.1'
 
 
 from redexpect.redexpect import RedExpect
