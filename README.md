@@ -17,7 +17,7 @@ If something is not there please raise an issue so it can be added to the docume
 [Now with autodocs!](https://redexpect.readthedocs.io/en/latest/ "Documentation! :)")
 
 
-# Why not use <other software>?
+# Why not use [other software]?
 
 This is my experiences with other pieces of software to do something similar or the same as RedExpect.
 It mostly revolves around compatibility with remote servers, (lack of) state(less) based automation or lack of features.
