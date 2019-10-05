@@ -14,14 +14,15 @@
 # You should have received a copy of the GNU General Public License along
 # with this program; if not, write to the Free Software Foundation, Inc.,
 # 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+import re
 import setuptools
 
 with open('README.md', 'r') as fh:
     long_description = fh.read()
 
-with open('VERSION', 'r') as fh:
-    redexpect_version = fh.read()
-
+with open('redexpect/__init__.py', 'r') as fh:
+    reg = re.compile(r"^VERSION.+?\'(.*)\'$",re.DOTALL|re.MULTILINE)
+    redexpect_version = reg.findall(fh.read())[0]
 
 deps = [
     'redssh>=2*'
