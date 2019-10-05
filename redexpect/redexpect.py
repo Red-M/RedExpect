@@ -161,7 +161,7 @@ class RedExpect(redssh.RedSSH):
                  list of regexes returns the index of the matched string in
                  the list.
         '''
-        self.current_output = ''
+        current_output = ''
 
         if isinstance(re_strings,str) and len(re_strings)!=0:
             re_strings = [re_strings]
@@ -170,27 +170,28 @@ class RedExpect(redssh.RedSSH):
         if timeout==None:
             timeout = self.expect_timeout
 
-        while (len(re_strings)==0 or not [re_string for re_string in re_strings if re.search(default_match_prefix+re_string,self.current_output,re.DOTALL)]):
+        while (len(re_strings)==0 or not [re_string for re_string in re_strings if re.search(default_match_prefix+re_string,current_output,re.DOTALL)]):
             for current_buffer in self.read():
                 # print(current_buffer)
-                current_buffer_decoded = self.remote_text_clean(current_buffer.decode(self.encoding),strip_ansi=strip_ansi)
+                current_buffer_decoded = str(self.remote_text_clean(current_buffer.decode(self.encoding),strip_ansi=strip_ansi))
                 # print(current_buffer_decoded)
-                self.current_output += current_buffer_decoded
+                current_output += current_buffer_decoded
             if float(time.time()-time_started)>timeout and timeout!=0:
                 raise(exceptions.ExpectTimeout(re_strings))
 
         if len(re_strings)!=0:
-            found_pattern = [(re_index,re_string) for (re_index,re_string) in enumerate(re_strings) if re.search(default_match_prefix+re_string,self.current_output,re.DOTALL)]
+            found_pattern = [(re_index,re_string) for (re_index,re_string) in enumerate(re_strings) if re.search(default_match_prefix+re_string,current_output,re.DOTALL)]
 
-        self.current_output_clean = self.current_output
+        self.current_output = current_output
+        current_output_clean = str(current_output) # memcopy hack
 
         if len(self.current_send_string)!=0:
-            self.current_output_clean = self.current_output_clean.replace(self.current_send_string+'\n','')
+            current_output_clean = current_output_clean.replace(self.current_send_string+'\n','')
         self.current_send_string = ''
 
         if len(re_strings)!=0 and len(found_pattern)!=0:
-            # print(self.current_output_clean)
-            self.current_output_clean = re.sub(found_pattern[0][1],'',self.current_output_clean)
+            # print(current_output_clean)
+            self.current_output_clean = re.sub(found_pattern[0][1],'',current_output_clean)
             self.last_match = found_pattern[0][1]
             return(found_pattern[0][0])
         # else:
@@ -214,9 +215,9 @@ class RedExpect(redssh.RedSSH):
         self.sendline(cmd)
         self.prompt()
         if clean_output==True:
-            out = self.current_output_clean
+            out = str(self.current_output_clean)
         else:
-            out = self.current_output
+            out = str(self.current_output)
         if remove_newline==True:
             while out.endswith('\n') or out.endswith('\r'):
                 out = out[:-1]
