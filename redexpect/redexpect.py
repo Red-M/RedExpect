@@ -111,7 +111,7 @@ class RedExpect(redssh.RedSSH):
         '''
         Return a unique prompt from the existing SSH session. Override this function to generate the compiled regex however you'd like, eg, from a database or from a hostname.
 
-        :returns: compiled ``rstring``
+        :returns: compiled ``regex str``
         '''
         return(re.escape(self.command('',clean_output=False)[1:])) # A smart-ish way to get the current prompt after a dumb prompt match
 
@@ -130,13 +130,16 @@ class RedExpect(redssh.RedSSH):
             self.command(self.prompt_regex_SET_SH)
         self.prompt_regex = self.get_unique_prompt()
 
-    def prompt(self):
+    def prompt(self,timeout=None):
         '''
         Get a command line prompt in the terminal.
         Useful for using :func:`redexpect.RedExpect.sendline` to send commands
         then using this for when you want to get back to a prompt to enter further commands.
+
+        :param timeout: Timeout for the prompt to be reached.
+        :type timeout: ``float`` or ``int``
         '''
-        self.expect(self.prompt_regex)
+        self.expect(self.prompt_regex,timeout=timeout)
 
     def expect(self,re_strings='',default_match_prefix='',strip_ansi=True,timeout=None):
         '''
@@ -154,9 +157,12 @@ class RedExpect(redssh.RedSSH):
                            that we should expect; if this is not specified,
                            then ``EOF`` is expected (i.e. the shell is completely
                            closed after the exit command is issued)
+        :type re_strings: ``array`` or ``regex str``
         :param default_match_prefix: A prefix to all match regexes, defaults to ``''``.
                                      Useful for making sure you have a prefix to match the start of a prompt.
+        :type default_match_prefix: ``str``
         :param strip_ansi: If ``True``, will strip ansi control chars befores regex matching.
+        :type strip_ansi: ``bool``
         :return: ``int`` - An ``EOF`` returns ``-1``, a regex metch returns ``0`` and a match in a
                  list of regexes returns the index of the matched string in
                  the list.
