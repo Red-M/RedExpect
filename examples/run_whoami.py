@@ -9,7 +9,7 @@ def main():
     expect = redexpect.RedExpect()
 
     print(hostname)
-    expect.connect(hostname=hostname,username=username,password=passwd,timeout=1.5)
+    expect.login(hostname=hostname,username=username,password=passwd,timeout=1.5)
     print(expect.command('whoami',remove_newline=True))
     expect.exit()
 
