@@ -138,6 +138,7 @@ class RedExpect(redssh.RedSSH):
 
         :param timeout: Timeout for the prompt to be reached.
         :type timeout: ``float`` or ``int``
+        :raises: :class:`redexpect.exceptions.ExpectTimeout` if the timeout for expect has been reached.
         '''
         self.expect(self.prompt_regex,timeout=timeout)
 
@@ -163,9 +164,12 @@ class RedExpect(redssh.RedSSH):
         :type default_match_prefix: ``str``
         :param strip_ansi: If ``True``, will strip ansi control chars befores regex matching.
         :type strip_ansi: ``bool``
+        :param timeout: Set the timeout for this finish blocking within, setting to ``None`` takes the value from :var:`redexpect.RedExpect.expect_timeout` which can be set at first instance, set to ``0`` to disable.
+        :type timeout: ``float``
         :return: ``int`` - An ``EOF`` returns ``-1``, a regex metch returns ``0`` and a match in a
                  list of regexes returns the index of the matched string in
                  the list.
+        :raises: :class:`redexpect.exceptions.ExpectTimeout` if the timeout for expect has been reached.
         '''
         current_output = ''
 
@@ -205,7 +209,7 @@ class RedExpect(redssh.RedSSH):
         # If someone manages to get a ``None`` instead of a -1 please open an issue.
         # I want to know how you did that so I can write a test for it :)
 
-    def command(self,cmd,clean_output=True,remove_newline=False):
+    def command(self,cmd,clean_output=True,remove_newline=False,timeout=None):
         '''
         Run a command in the remote terminal.
 
@@ -215,11 +219,14 @@ class RedExpect(redssh.RedSSH):
         :type clean_output: ``bool``
         :param remove_newline: Set to ``True`` to remove the last newline on a return, useful when a command adds a newline to its output.
         :type remove_newline: ``bool``
+        :param timeout: Set the timeout for this command to complete within, if set to ``None`` this will use the value of :var:`redexpect.RedExpect.expect_timeout` which can be set at first instance.
+        :type timeout: ``float``
 
         :returns: ``str``
+        :raises: :class:`redexpect.exceptions.ExpectTimeout` if the timeout for expect has been reached.
         '''
         self.sendline(cmd)
-        self.prompt()
+        self.prompt(timeout=timeout)
         if clean_output==True:
             out = str(self.current_output_clean)
         else:
