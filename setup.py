@@ -41,6 +41,13 @@ test_deps = [
     'pytest-cov'
 ]
 
+package_excludes = [
+    'tests',
+    'tests.*',
+    '*.tests',
+    '*.tests.*'
+]
+
 
 setuptools.setup(
     name='redexpect',
@@ -52,7 +59,7 @@ setuptools.setup(
     description='An SSH automation library using expect.',
     long_description=long_description,
     long_description_content_type='text/markdown',
-    packages=setuptools.find_packages(),
+    packages=setuptools.find_packages(exclude=package_excludes),
     platforms='Posix',
     install_requires=deps,
     extras_require={
@@ -68,6 +75,16 @@ setuptools.setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
-        'Intended Audience :: Developers'
+        'Intended Audience :: Developers',
+        'Topic :: Software Development :: Libraries',
+        'Topic :: Software Development :: Libraries :: Python Modules',
+        'Topic :: System :: Shells',
+        'Topic :: System :: Networking',
+        'Operating System :: POSIX',
+        'Operating System :: POSIX :: Linux',
+        'Operating System :: POSIX :: BSD',
+        'Operating System :: Microsoft :: Windows',
+        'Operating System :: MacOS :: MacOS X',
+        'Operating System :: OS Independent'
     ],
 )
