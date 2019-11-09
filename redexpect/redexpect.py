@@ -74,7 +74,7 @@ class RedExpect(redssh.RedSSH):
         '''
         self.connect(*args,**kwargs)
         self.device_init()
-        self.expect(self.prompt_regex)
+        self.prompt()
         if auto_unique_prompt==True:
             self.set_unique_prompt()
 
