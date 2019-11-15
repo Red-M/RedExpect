@@ -130,17 +130,22 @@ class RedExpect(redssh.RedSSH):
             self.command(self.prompt_regex_SET_SH)
         self.prompt_regex = self.get_unique_prompt()
 
-    def prompt(self,timeout=None):
+    def prompt(self,additional_matches=[],timeout=None):
         '''
         Get a command line prompt in the terminal.
         Useful for using :func:`redexpect.RedExpect.sendline` to send commands
         then using this for when you want to get back to a prompt to enter further commands.
 
+        :param additional_matches: Additional matches to count as a prompt.
+        :type additional_matches: ``arr``
         :param timeout: Timeout for the prompt to be reached.
         :type timeout: ``float`` or ``int``
         :raises: :class:`redexpect.exceptions.ExpectTimeout` if the timeout for expect has been reached.
+        :returns: ``int`` - Match number, ``0`` is always the prompt defined for the session.
         '''
-        self.expect(self.prompt_regex,timeout=timeout)
+        if not isinstance(additional_matches,type([])):
+            additional_matches = [additional_matches]
+        return(self.expect([self.prompt_regex]+additional_matches,timeout=timeout))
 
     def expect(self,re_strings='',default_match_prefix='',strip_ansi=True,timeout=None):
         '''
@@ -182,7 +187,10 @@ class RedExpect(redssh.RedSSH):
 
         while (len(re_strings)==0 or not [re_string for re_string in re_strings if re.search(default_match_prefix+re_string,current_output,re.DOTALL)]):
             for current_buffer in self.read():
+                if current_buffer==None:
+                    return(-1)
                 # print(current_buffer)
+                self.out_feed(current_buffer)
                 current_buffer_decoded = str(self.remote_text_clean(current_buffer.decode(self.encoding),strip_ansi=strip_ansi))
                 # print(current_buffer_decoded)
                 current_output += current_buffer_decoded
@@ -208,6 +216,14 @@ class RedExpect(redssh.RedSSH):
             # return(-1)
         # If someone manages to get a ``None`` instead of a -1 please open an issue.
         # I want to know how you did that so I can write a test for it :)
+
+    def out_feed(self,raw_data):
+        '''
+        Override to get the raw data from the remote machine into a function.
+
+        Useful as a way to get data from the ``expect()`` to another library without impacting the expect side.
+        '''
+        pass
 
     def command(self,cmd,clean_output=True,remove_newline=False,timeout=None):
         '''
