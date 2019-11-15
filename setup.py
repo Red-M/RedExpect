@@ -34,7 +34,9 @@ doc_deps = [
 ]
 
 test_deps = [
-    'redssh[tests]>=2*',
+    'asyncssh',
+    'paramiko',
+    'sftpserver',
     'coveralls',
     'pytest-cov'
 ]
