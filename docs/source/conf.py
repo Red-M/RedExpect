@@ -198,6 +198,7 @@ highlight_language = 'py'
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
+    'ssh2': ('https://ssh2-python.readthedocs.io/en/latest/', None),
     'redssh': ('https://redssh.readthedocs.io/en/latest/', None),
     'redexpect': ('https://redexpect.readthedocs.io/en/latest/', None),
     'redvty': ('https://redvty.readthedocs.io/en/latest/', None),
