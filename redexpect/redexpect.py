@@ -66,8 +66,8 @@ class RedExpect(redssh.RedSSH):
 
     def login(self,*args,auto_unique_prompt=True,**kwargs):
         '''
-        This uses :func:`redssh.RedSSH.connect` to connect and then login to a remote host.
-        This only takes a single optional arguement and the rest are defered to :func:`redssh.RedSSH.connect`.
+        This uses :class:`redssh.RedSSH.connect` to connect and then login to a remote host.
+        This only takes a single optional arguement and the rest are defered to :class:`redssh.RedSSH.connect`.
 
         :param auto_unique_prompt: Automatically set a unique prompt to search for once logged into the remote server.
         :type auto_unique_prompt: ``float``
