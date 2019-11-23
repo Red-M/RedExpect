@@ -190,7 +190,6 @@ class RedExpect(redssh.RedSSH):
                 if current_buffer==None:
                     return(-1)
                 # print(current_buffer)
-                self.out_feed(current_buffer)
                 current_buffer_decoded = str(self.remote_text_clean(current_buffer.decode(self.encoding),strip_ansi=strip_ansi))
                 # print(current_buffer_decoded)
                 current_output += current_buffer_decoded
@@ -216,6 +215,14 @@ class RedExpect(redssh.RedSSH):
             # return(-1)
         # If someone manages to get a ``None`` instead of a -1 please open an issue.
         # I want to know how you did that so I can write a test for it :)
+
+    def read(self,block=False):
+        gen = super().read(block)
+        if isinstance(gen,type([])):
+            return(gen)
+        for data in gen:
+            self.out_feed(data)
+            yield(data)
 
     def out_feed(self,raw_data):
         '''
