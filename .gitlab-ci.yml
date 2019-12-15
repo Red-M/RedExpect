@@ -20,7 +20,7 @@ pages:
 tests:
     script:
     - apt update
-    - apt install \-y make curl wget python3 python3-distutils
+    - apt install \-y make curl wget python3 python3-distutils git
     - wget -O get-pip.py https://bootstrap.pypa.io/get-pip.py
     - python3 ./get-pip.py
     - pip install -e ./[tests]
