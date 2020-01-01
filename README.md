@@ -1,7 +1,7 @@
 # RedExpect
 [![Documentation Status](https://readthedocs.org/projects/redexpect/badge/?version=latest)](https://redexpect.readthedocs.io/en/latest/?badge=latest)
 
-[![Test Status](https://travis-ci.com/Red-M/RedExpect.svg?branch=master)](https://travis-ci.com/Red-M/RedExpect.svg?branch=master)
+[![Test Status](https://travis-ci.com/Red-M/RedExpect.svg?branch=master)](https://travis-ci.com/Red-M/RedExpect)
 [![Coverage Status](https://coveralls.io/repos/github/Red-M/RedExpect/badge.svg?branch=master)](https://coveralls.io/github/Red-M/RedExpect?branch=master)
 
 RedExpect makes automating remote machines over SSH very easy to do and is very fast in doing exactly what you ask of it.
