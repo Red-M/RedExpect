@@ -5,4 +5,5 @@ PYTHON_MINOR_VERSION=${3}
 
 pip${PYTHON_VERSION} install -e ./[tests]
 pip${PYTHON_VERSION} install -e ./[docs]
+pip${PYTHON_VERSION} install sftpserver
 

@@ -31,5 +31,5 @@ I've found other automation libraries or solutions lacking, such as:
 
 
 # TO DO
-- Unit tests
+- Update unit tests to match RedSSH's tests
 - More examples
