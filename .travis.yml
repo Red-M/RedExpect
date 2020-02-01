@@ -6,8 +6,8 @@ notifications:
 sudo: required
 python:
   #~ - 2.7
-  #~ - 3.5
-  #~ - 3.6
+  - 3.5
+  - 3.6
   - 3.7
   - 3.8
 
@@ -19,15 +19,11 @@ addons:
       - curl
       - wget
       - python3
-      #~ - python3-distutils
 
 install:
-  #~ - sudo -E apt update
-  #~ - sudo -E apt -yq --no-install-suggests --no-install-recommends install \-y make curl wget python3
-  - pip install -e ./[tests]
-  - pip install -e ./[docs]
+  - sudo -E ./tests/scripts/install_root.sh TRAVIS 3
+  - ./tests/scripts/install.sh TRAVIS 3
 
 script:
-  - ./tests/test.sh
-  - cd ./docs
-  - make html
+  - ./tests/scripts/test.sh TRAVIS
+  - ./tests/scripts/docs.sh TRAVIS 3
