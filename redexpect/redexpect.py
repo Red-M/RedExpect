@@ -21,6 +21,11 @@ import time
 import re
 import redssh
 
+redssh.RedSSH.connect.__doc__ = '''
+    .. warning::
+        Do not use this function, instead use :func:`redexpect.RedExpect.login`.
+'''+redssh.RedSSH.connect.__doc__
+
 from redexpect import exceptions
 
 class RedExpect(redssh.RedSSH):
