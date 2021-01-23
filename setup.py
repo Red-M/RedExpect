@@ -41,7 +41,8 @@ test_deps = [
     'coveralls',
     'pytest-cov',
     'pylint',
-    'bandit'
+    'bandit',
+    'safety'
 ]
 
 package_excludes = [
