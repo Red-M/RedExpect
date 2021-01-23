@@ -1,7 +1,9 @@
 # RedExpect
-[![Documentation Status](https://readthedocs.org/projects/redexpect/badge/?version=latest)](https://redexpect.readthedocs.io/en/latest/?badge=latest)
+![PyPI](https://img.shields.io/pypi/v/RedExpect?style=plastic)
+[![License: GPL v2](https://img.shields.io/badge/License-GPL%20v2-blue.svg?style=plastic)](https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html)
 
 [![Test Status](https://travis-ci.com/Red-M/RedExpect.svg?branch=master)](https://travis-ci.com/Red-M/RedExpect)
+[![Documentation Status](https://readthedocs.org/projects/redexpect/badge/?version=latest&style=plastic)](https://redexpect.readthedocs.io/en/latest/?badge=latest)
 [![Coverage Status](https://coveralls.io/repos/github/Red-M/RedExpect/badge.svg?branch=master)](https://coveralls.io/github/Red-M/RedExpect?branch=master)
 
 RedExpect makes automating remote machines over SSH very easy to do and is very fast in doing exactly what you ask of it.
