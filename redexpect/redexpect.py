@@ -38,7 +38,7 @@ class RedExpect(redssh.RedSSH):
 
     :param prompt: The basic prompt to expect for the first command line.
     :type prompt: ``regex string``
-    :param encoding: Set the encoding to something other than the default of ``'utf8'`` when your target SSH server doesn't return UTF-8.
+    :param encoding: Set the encoding to something other than the default of ``'utf16'`` when your target SSH server doesn't return UTF-16.
     :type encoding: ``str``
     :param newline: Set the newline for sending and recieving text to the remote server.
     :type newline: ``str``

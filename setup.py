@@ -34,11 +34,14 @@ doc_deps = [
 ]
 
 test_deps = [
+    'redssh[tests]',
     'asyncssh',
     'paramiko',
     'sftpserver',
     'coveralls',
-    'pytest-cov'
+    'pytest-cov',
+    'pylint',
+    'bandit'
 ]
 
 package_excludes = [
