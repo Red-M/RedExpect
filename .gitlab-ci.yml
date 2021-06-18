@@ -1,5 +1,5 @@
 
-pages:
+doc_pages:
     image: debian:10
     script:
     - ./tests/scripts/install_root.sh GITLAB 3 7
@@ -10,6 +10,8 @@ pages:
         - public
     only:
     - master
+    - release/*
+    - develop
 
 tests_py3.7:
     image: debian:10
@@ -22,15 +24,62 @@ tests_py3.7:
         - htmlcov
     only:
     - master
+    - release/*
+    - develop
 
 tests_py3.5:
     image: debian:9
     script:
     - ./tests/scripts/install_root.sh GITLAB 3 5
-    - ./tests/scripts/install.sh GITLAB 3 5
+    - ./tests/scripts/install.sh GITLAB 3
     - ./tests/scripts/test.sh GITLAB 3 5
     artifacts:
         paths:
         - htmlcov
     only:
     - master
+    - release/*
+    - develop
+
+tests_debtesting:
+    image: debian:testing
+    script:
+    - ./tests/scripts/install_root.sh GITLAB 3
+    - ./tests/scripts/install.sh GITLAB 3
+    - ./tests/scripts/test.sh GITLAB 3
+    artifacts:
+        paths:
+        - htmlcov
+    only:
+    - master
+    - release/*
+    - develop
+
+
+tests_debstable:
+    image: debian:stable
+    script:
+    - ./tests/scripts/install_root.sh GITLAB 3
+    - ./tests/scripts/install.sh GITLAB 3
+    - ./tests/scripts/test.sh GITLAB 3
+    artifacts:
+        paths:
+        - htmlcov
+    only:
+    - master
+    - release/*
+    - develop
+
+tests_deboldstable:
+    image: debian:oldstable
+    script:
+    - ./tests/scripts/install_root.sh GITLAB 3
+    - ./tests/scripts/install.sh GITLAB 3
+    - ./tests/scripts/test.sh GITLAB 3
+    artifacts:
+        paths:
+        - htmlcov
+    only:
+    - master
+    - release/*
+    - develop
