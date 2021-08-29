@@ -13,6 +13,20 @@ doc_pages:
     - release/*
     - develop
 
+tests_py3.9:
+    image: debian:11
+    script:
+    - ./tests/scripts/install_root.sh GITLAB 3 9
+    - ./tests/scripts/install.sh GITLAB 3 9
+    - ./tests/scripts/test.sh GITLAB 3 9
+    artifacts:
+        paths:
+        - htmlcov
+    only:
+    - master
+    - release/*
+    - develop
+
 tests_py3.7:
     image: debian:10
     script:
