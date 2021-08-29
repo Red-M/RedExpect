@@ -1,99 +1,75 @@
 
-doc_pages:
-    image: debian:10
-    script:
-    - ./tests/scripts/install_root.sh GITLAB 3 7
-    - ./tests/scripts/install.sh GITLAB 3 7
-    - ./tests/scripts/docs.sh GITLAB 3 7
+.cicd_job_defaults: &cicd_job_defaults
+    only:
+        - master
+        - release/*
+        - develop
+
+.cicd_testing_job_defaults: &cicd_testing_job_defaults
+    <<: *cicd_job_defaults
     artifacts:
         paths:
-        - public
-    only:
-    - master
-    - release/*
-    - develop
+            - htmlcov
+
+.cicd_docs_job_defaults: &cicd_docs_job_defaults
+    <<: *cicd_job_defaults
+    artifacts:
+        paths:
+            - htmlcov
+
+doc_pages:
+    <<: *cicd_docs_job_defaults
+    image: debian:10
+    script:
+        - ./tests/scripts/install_root.sh GITLAB 3 7
+        - ./tests/scripts/install.sh GITLAB 3 7
+        - ./tests/scripts/docs.sh GITLAB 3 7
 
 tests_py3.9:
+    <<: *cicd_testing_job_defaults
     image: debian:11
     script:
-    - ./tests/scripts/install_root.sh GITLAB 3 9
-    - ./tests/scripts/install.sh GITLAB 3 9
-    - ./tests/scripts/test.sh GITLAB 3 9
-    artifacts:
-        paths:
-        - htmlcov
-    only:
-    - master
-    - release/*
-    - develop
+        - ./tests/scripts/install_root.sh GITLAB 3 9
+        - ./tests/scripts/install.sh GITLAB 3 9
+        - ./tests/scripts/test.sh GITLAB 3 9
 
 tests_py3.7:
+    <<: *cicd_testing_job_defaults
     image: debian:10
     script:
-    - ./tests/scripts/install_root.sh GITLAB 3 7
-    - ./tests/scripts/install.sh GITLAB 3 7
-    - ./tests/scripts/test.sh GITLAB 3 7
-    artifacts:
-        paths:
-        - htmlcov
-    only:
-    - master
-    - release/*
-    - develop
+        - ./tests/scripts/install_root.sh GITLAB 3 7
+        - ./tests/scripts/install.sh GITLAB 3 7
+        - ./tests/scripts/test.sh GITLAB 3 7
 
 tests_py3.5:
+    <<: *cicd_testing_job_defaults
     image: debian:9
     script:
-    - ./tests/scripts/install_root.sh GITLAB 3 5
-    - ./tests/scripts/install.sh GITLAB 3
-    - ./tests/scripts/test.sh GITLAB 3 5
-    artifacts:
-        paths:
-        - htmlcov
-    only:
-    - master
-    - release/*
-    - develop
+        - ./tests/scripts/install_root.sh GITLAB 3 5
+        - ./tests/scripts/install.sh GITLAB 3
+        - ./tests/scripts/test.sh GITLAB 3 5
 
 tests_debtesting:
+    <<: *cicd_testing_job_defaults
     image: debian:testing
     script:
-    - ./tests/scripts/install_root.sh GITLAB 3
-    - ./tests/scripts/install.sh GITLAB 3
-    - ./tests/scripts/test.sh GITLAB 3
-    artifacts:
-        paths:
-        - htmlcov
-    only:
-    - master
-    - release/*
-    - develop
+        - ./tests/scripts/install_root.sh GITLAB 3
+        - ./tests/scripts/install.sh GITLAB 3
+        - ./tests/scripts/test.sh GITLAB 3
 
 
 tests_debstable:
+    <<: *cicd_testing_job_defaults
     image: debian:stable
     script:
-    - ./tests/scripts/install_root.sh GITLAB 3
-    - ./tests/scripts/install.sh GITLAB 3
-    - ./tests/scripts/test.sh GITLAB 3
-    artifacts:
-        paths:
-        - htmlcov
-    only:
-    - master
-    - release/*
-    - develop
+        - ./tests/scripts/install_root.sh GITLAB 3
+        - ./tests/scripts/install.sh GITLAB 3
+        - ./tests/scripts/test.sh GITLAB 3
 
 tests_deboldstable:
+    <<: *cicd_testing_job_defaults
     image: debian:oldstable
     script:
-    - ./tests/scripts/install_root.sh GITLAB 3
-    - ./tests/scripts/install.sh GITLAB 3
-    - ./tests/scripts/test.sh GITLAB 3
-    artifacts:
-        paths:
-        - htmlcov
-    only:
-    - master
-    - release/*
-    - develop
+        - ./tests/scripts/install_root.sh GITLAB 3
+        - ./tests/scripts/install.sh GITLAB 3
+        - ./tests/scripts/test.sh GITLAB 3
