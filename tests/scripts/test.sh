@@ -4,7 +4,7 @@ CI_SYSTEM=${1}
 PYTHON_VERSION=${2}
 
 if [ ! -z $CI_SYSTEM ] && [ ${CI_SYSTEM} != "LOCAL" ]; then
-    git checkout master
+    export GIT_BRANCH=${CI_COMMIT_BRANCH}
 fi
 
 if [ ! -z $CI_SYSTEM ] && [ ${CI_SYSTEM} == "TRAVIS" ]; then
