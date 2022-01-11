@@ -21,11 +21,6 @@ import time
 import re
 import redssh
 
-redssh.RedSSH.connect.__doc__ = '''
-    .. warning::
-        Do not use this function, instead use :func:`redexpect.RedExpect.login`.
-'''
-
 from redexpect import exceptions
 
 class RedExpect(redssh.RedSSH):
@@ -53,6 +48,9 @@ class RedExpect(redssh.RedSSH):
         self.prompt_regex = prompt
         self.prompt_regex_SET_SH = r"PS1='[REDEXPECT]\$ '"
         self.prompt_regex_SET_CSH = r"set prompt='[REDEXPECT]\$ '"
+        self.sudo_password_lines = [r'.+?asswor.+?\:\s+']
+        self.sudo_failure_lines = [r'Sorry.+?\.',r'.+?Authentication failure']
+        self.remote_text_clent_regex = re.compile(r'\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})?(;[0-9]{3})?)?[m|K]?')
         self.current_send_string = ''
         self.current_output = ''
         self.current_output_clean = ''
@@ -77,11 +75,18 @@ class RedExpect(redssh.RedSSH):
         :param auto_unique_prompt: Automatically set a unique prompt to search for once logged into the remote server.
         :type auto_unique_prompt: ``float``
         '''
-        self.connect(*args,**kwargs)
+        super().connect(*args,**kwargs)
         self.device_init()
         self.prompt()
         if auto_unique_prompt==True:
             self.set_unique_prompt()
+
+    def connect(self,*args,**kwargs):
+        '''
+        .. warning::
+            Do not use this function, it has been stubbed out and is purely here for compatibility reasons, instead use :func:`redexpect.RedExpect.login`.
+        '''
+        self.login(*args,**kwargs)
 
     def sendline_raw(self,string):
         '''
@@ -107,9 +112,10 @@ class RedExpect(redssh.RedSSH):
         self.sendline_raw(send_string+newline)
 
     def remote_text_clean(self,string,strip_ansi=True):
-        string = string.replace('\r','')
-        if strip_ansi==True:
-            string = re.sub(r'\x1b\[([0-9,A-Z]{1,2}(;[0-9]{1,2})?(;[0-9]{3})?)?[m|K]?','',string)
+        if len(string)>0:
+            string = string.replace('\r','')
+            if strip_ansi==True:
+                string = self.remote_text_clent_regex.sub('',string)
         return(string)
 
     def get_unique_prompt(self):
@@ -160,10 +166,8 @@ class RedExpect(redssh.RedSSH):
         matched using expression ``r'\\n<regex>$'`` so you'll need to provide an
         easygoing regex such as ``'.*server.*'`` if you wish to have a fuzzy
         match.
-
         This has been originally taken from paramiko_expect and modified to work with RedExpect.
         I've also made the style consistent with the rest of the library.
-
         :param re_strings: Either a regex string or list of regex strings
                            that we should expect; if this is not specified,
                            then ``EOF`` is expected (i.e. the shell is completely
@@ -190,7 +194,7 @@ class RedExpect(redssh.RedSSH):
         if timeout==None:
             timeout = self.expect_timeout
 
-        while (len(re_strings)==0 or not [re_string for re_string in re_strings if re.search(default_match_prefix+re_string,current_output,re.DOTALL)]):
+        while (len(re_strings)==0 or not [re_string for re_string in re_strings if re.search(default_match_prefix+re_string,current_output,re.S|re.M)]):
             for current_buffer in self.read():
                 if current_buffer==None:
                     return(-1)
@@ -202,7 +206,7 @@ class RedExpect(redssh.RedSSH):
                 raise(exceptions.ExpectTimeout(re_strings))
 
         if len(re_strings)!=0:
-            found_pattern = [(re_index,re_string) for (re_index,re_string) in enumerate(re_strings) if re.search(default_match_prefix+re_string,current_output,re.DOTALL)]
+            found_pattern = [(re_index,re_string) for (re_index,re_string) in enumerate(re_strings) if re.search(default_match_prefix+re_string,current_output,re.S|re.M)]
 
         self.current_output = current_output
         current_output_clean = str(current_output) # memcopy hack
@@ -213,7 +217,7 @@ class RedExpect(redssh.RedSSH):
 
         if len(re_strings)!=0 and len(found_pattern)!=0:
             # print(current_output_clean)
-            self.current_output_clean = re.sub(found_pattern[0][1],'',current_output_clean)
+            self.current_output_clean = re.sub(found_pattern[0][1],'',current_output_clean,re.S|re.M)
             self.last_match = found_pattern[0][1]
             return(found_pattern[0][0])
         # else:
@@ -224,6 +228,7 @@ class RedExpect(redssh.RedSSH):
     def read(self,block=False):
         gen = super().read(block)
         if isinstance(gen,type([])):
+            self.out_feed(b''.join(gen))
             return(gen)
         for data in gen:
             self.out_feed(data)
@@ -279,15 +284,14 @@ class RedExpect(redssh.RedSSH):
         :raises: :class:`redexpect.exceptions.BadSudoPassword` if the password provided does not allow for privilege escalation.
         '''
         cmd = su_cmd
-        password_line = r'.+?asswor.+?\:\s+'
         if sudo==True:
             cmd = 'sudo '+su_cmd
         self.sendline(cmd)
-        self.expect(password_line)
+        self.expect(self.sudo_password_lines)
         self.sendline_raw(password+self.newline)
         acceptable_response = [self.basic_prompt]
-        bad_response = [password_line,r'Sorry.+?\.',r'.+?Authentication failure']
-        result = self.expect(re_strings=bad_response+acceptable_response) # Might be an idea to allow extra failure strings here to be more platform agnostic
+        bad_response = self.sudo_password_lines+self.sudo_failure_lines
+        result = self.expect(re_strings=bad_response+acceptable_response)
         if result>=len(bad_response)-1:
             self.set_unique_prompt()
         else:
