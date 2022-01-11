@@ -21,7 +21,7 @@ if [ ! -z $CI_SYSTEM ]; then
     coveralls || true
 fi
 
-CODE_VALIDATION_PY_FILES="$(find ./ -type f | grep '\.py$')"
+CODE_VALIDATION_PY_FILES="$(find ./ -type f | grep '\.py$' | grep -v 'tests/')"
 BANDIT_REPORT=$(tempfile)
 PYLINT_REPORT=$(tempfile)
 SAFETY_REPORT=$(tempfile)
