@@ -195,13 +195,15 @@ class RedExpect(redssh.RedSSH):
             timeout = self.expect_timeout
 
         while (len(re_strings)==0 or not [re_string for re_string in re_strings if re.search(default_match_prefix+re_string,current_output,re.S|re.M)]):
+            cbuffer = b''
             for current_buffer in self.read():
                 if current_buffer==None:
                     return(-1)
+                cbuffer+=current_buffer
                 # print(current_buffer)
-                current_buffer_decoded = str(self.remote_text_clean(current_buffer.decode(self.encoding),strip_ansi=strip_ansi))
-                # print(current_buffer_decoded)
-                current_output += current_buffer_decoded
+            current_buffer_decoded = str(self.remote_text_clean(current_buffer.decode(self.encoding),strip_ansi=strip_ansi))
+            # print(current_buffer_decoded)
+            current_output+=current_buffer_decoded
             if float(time.time()-time_started)>timeout and timeout!=0:
                 raise(exceptions.ExpectTimeout(re_strings))
 
