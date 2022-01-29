@@ -201,7 +201,7 @@ class RedExpect(redssh.RedSSH):
                     return(-1)
                 cbuffer+=current_buffer
                 # print(current_buffer)
-            current_buffer_decoded = str(self.remote_text_clean(current_buffer.decode(self.encoding),strip_ansi=strip_ansi))
+            current_buffer_decoded = str(self.remote_text_clean(cbuffer.decode(self.encoding),strip_ansi=strip_ansi))
             # print(current_buffer_decoded)
             current_output+=current_buffer_decoded
             if float(time.time()-time_started)>timeout and timeout!=0:
