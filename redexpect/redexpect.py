@@ -219,7 +219,7 @@ class RedExpect(redssh.RedSSH):
 
         if len(re_strings)!=0 and len(found_pattern)!=0:
             # print(current_output_clean)
-            self.current_output_clean = re.sub(found_pattern[0][1],'',current_output_clean,re.S|re.M)
+            self.current_output_clean = re.sub(found_pattern[0][1],'',current_output_clean,flags=re.S|re.M)
             self.last_match = found_pattern[0][1]
             return(found_pattern[0][0])
         # else:
