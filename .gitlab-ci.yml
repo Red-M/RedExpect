@@ -11,6 +11,8 @@
         paths:
             - htmlcov
             - coverage.xml
+        reports:
+            junit: coverage.xml
 
 .cicd_docs_job_defaults: &cicd_docs_job_defaults
     <<: *cicd_job_defaults
