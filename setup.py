@@ -25,7 +25,7 @@ with open('redexpect/__init__.py', 'r') as fh:
     redexpect_version = reg.findall(fh.read())[0]
 
 deps = [
-    'redssh>=2*'
+    'redssh>=2.0.0'
 ]
 
 doc_deps = [
